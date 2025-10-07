@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define TAM 5
 
 // Chame essa função para preencher um vetor numero de tamanho n com um número
 // aleatório entre 00000 e 99999
 void gera_numero(int numero[], int n) {
-  //srand(time(NULL));//ESTOU COMENTANDO PARA TESTAR MEU TESTE E VER SE TA CERTO QUANDO TERMINAR VOU TIRAR O COMENTARIO!
+  
+  srand(time(NULL));
 
   for (int i = 0; i < n; ++i)
     numero[i] = rand() % 10;
@@ -38,41 +40,60 @@ void imprime_acertados(int numero[], int acertados[], int n) {
 }
 
 int main() {
-
-//PRINTS IMPORTANTES:
-//printf("Gerei um numero aleatorio de 5 algarismos. Tente adivinhar!");
-//printf("Digite o numero de tentativas para encontrar o numero: n_tentativas");
-//printf("Digite um numero: 75000");
-//printf("Algarismos corretos: 75___");
-//printf("Parabens, voce adivinhou o numero 75132!");
-//printf("Depois de n_tentativas tentativas, voce nao encontrou o numero 89014!");
-
-//*****************************************************************************
-
+    
   // ======== 1 e 2 - Inicialização e Configuração ========
-  void gera_numero(int numero[TAM], int n)//COLOCAR TAM ESTÁ CERTO? ELE É UMA VARIÁVEL GLOBAL? 
-  // gera_numero(...);
-  printf("Gerei um número aleatório de %d algarismos. Tente adivinhar!\n", TAM); 
+  int n_tentativas,adivinhe;
+  bool acertou;
+  int v_num[TAM],v_adivinhe[TAM],n_acertos[TAM];
+  
+  gera_numero(v_num,TAM);
+  
+  printf("\nGerei um número aleatório de %d algarismos. Tente adivinhar!\n", TAM);
+  
   // Pergunte ao usuário sobre a quantidade de tentativasa serem realizadas
-  printf("Digite o numero de tentativas para encontrar o numero:(modificar) n_tentativas");//VOU MODIFICAR AQUI COLOCANDO A VARIÁVEL E TALS
-
+  printf("Digite o numero de tentativas para encontrar o número: ");
+  scanf("%d",&n_tentativas);
+  
+  
+  
   // ======== 3 - Loop do Jogo ========
-  // Para um número de tentativas x, checa se o número lido está correto.
+  for (int i=1; i<=n_tentativas; i++){
+    printf("Digite um numero: ");
+    scanf("%d",&adivinhe);
+    
+    //montando vetor digitado pelo numero do usuario
+    acertou = true;
+    for (int j = TAM-1; j>=0; j--){
+        v_adivinhe[j]=adivinhe % 10;
+        adivinhe/= 10;
+        
+        if(v_adivinhe[j]==v_num[j]){
+            n_acertos[j]=1;
+        }else{
+            acertou = false;
+            n_acertos[j]=0;
+        }
+    }
 
-    //Como usar: A cada palpite incorreto do usuário, sua lógica na main deve primeiro
-    //preencher um vetor acertados com 1 nas posições corretas e 0 nas erradas. Em
-    //seguida, chame esta função para mostrar o feedback visual ao jogador.
-  //PRECISO FAZER A LOGICA AQUI PARA COMPARAR SE O NUMERO FOR TRUE TRAZER PARA O USÚARIO SE NÃO TRAZER UM _
+    imprime_acertados(v_num,n_acertos,TAM);
+    
+    
+    if(acertou){
+        printf("Parabéns, você adivinhou o número %05d!\n",devolve_numero(v_num,TAM));
+        break;
+    }
+  }
+  // Para um número de tentativas x, checa se o número lido está correto.
   // Para cada tentativa, caso não tenha acertado:
   //    imprime_acertados(...);
-  void imprime_acertados(int numero[], int acertados[], int n)
-
-
+  
   // ======== 4 - Finalização ========
   // Caso tenha encontrado o número, imprima:
-  int devolve_numero(int numero[], int n)
-  printf("Parabéns, você adivinhou o número %05d!\n", devolve_numero(...));
+  
   // Caso tenha esgotado as tentativas sem encontrar o número, imprima:
-  printf("Depois de %d tentativas, você não encontrou o número %05d!\n",...);
+  if(acertou==false){
+    printf("Depois de %d tentativas, você não encontrou o número %05d!\n",n_tentativas,devolve_numero(v_num,TAM));
+  }
+  
   return 0;
 }
